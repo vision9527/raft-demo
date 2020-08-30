@@ -25,8 +25,8 @@ var (
 )
 
 func init() {
-	flag.StringVar(&httpAddr, "http_addr", "127.0.0.1:7000", "http listen addr")
-	flag.StringVar(&raftAddr, "raft_addr", "127.0.0.1:7001", "raft listen addr")
+	flag.StringVar(&httpAddr, "http_addr", "127.0.0.1:7001", "http listen addr")
+	flag.StringVar(&raftAddr, "raft_addr", "127.0.0.1:7000", "raft listen addr")
 	flag.StringVar(&raftId, "raft_id", "1", "raft id")
 	flag.StringVar(&raftCluster, "raft_cluster", "1/127.0.0.1:7000,2/127.0.0.1:8000,3/127.0.0.1:9000", "cluster info")
 }
@@ -39,7 +39,7 @@ func main() {
 		os.Exit(1)
 		return
 	}
-	raftDir := "./node" + raftId
+	raftDir := "node/raft_" + raftId
 	os.MkdirAll(raftDir, 0700)
 
 	// 初始化raft
