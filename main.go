@@ -56,9 +56,7 @@ func main() {
 	// 监听leader变化
 	go func() {
 		for leader := range myRaft.LeaderCh() {
-			if leader {
-				isLeader = true
-			}
+			isLeader = leader
 		}
 	}()
 
