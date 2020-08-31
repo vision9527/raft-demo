@@ -52,11 +52,16 @@ func NewMyRaft(raftAddr, raftId, raftDir string) (*raft.Raft, *fsm.Fsm, error) {
 }
 
 func Bootstrap(rf *raft.Raft, raftId, raftAddr, raftCluster string) {
-	var configuration raft.Configuration
+	servers := rf.GetConfiguration().Configuration().Servers
+	if len(servers) > 0 {
+		return
+	}
 	peerArray := strings.Split(raftCluster, ",")
 	if len(peerArray) == 0 {
 		return
 	}
+
+	var configuration raft.Configuration
 	for _, peerInfo := range peerArray {
 		peer := strings.Split(peerInfo, "/")
 		id := peer[0]

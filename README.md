@@ -41,29 +41,39 @@
 
 * hashicorp/raft库 [https://github.com/hashicorp/raft](https://github.com/hashicorp/raft)
 
-*本项目是一个使用hashicorp/raft库搭建的简单kv服务*
+* raft节点配置相关
 
-* 启动node1: go run main.go --http_addr=127.0.0.1:7001 --raft_addr=127.0.0.1:7000 --raft_id=1 --raft_cluster=1/127.0.0.1:7000,2/127.0.0.1:8000,3/127.0.0.1:9000
+* raft启动流程
 
-* 启动node2: go run main.go --http_addr=127.0.0.1:8001 --raft_addr=127.0.0.1:8000 --raft_id=2 --raft_cluster=1/127.0.0.1:7000,2/127.0.0.1:8000,3/127.0.0.1:9000
+* raft监听事件
 
-* 启动node3: go run main.go --http_addr=127.0.0.1:9001 --raft_addr=127.0.0.1:9000 --raft_id=3 --raft_cluster=1/127.0.0.1:7000,2/127.0.0.1:8000,3/127.0.0.1:9000
+### 六、运行hashicorp/raft库搭建的简单kv服务
 
-* set请求：curl
+* 编译：go build -mod vendor
 
-* get请求：curl
+* 启动node1: ./raft-demo --http_addr=127.0.0.1:7001 --raft_addr=127.0.0.1:7000 --raft_id=1 --raft_cluster=1/127.0.0.1:7000,2/127.0.0.1:8000,3/127.0.0.1:9000
 
-### 六、模拟场景
+* 启动node2: ./raft-demo --http_addr=127.0.0.1:8001 --raft_addr=127.0.0.1:8000 --raft_id=2 --raft_cluster=1/127.0.0.1:7000,2/127.0.0.1:8000,3/127.0.0.1:9000
+
+* 启动node3: ./raft-demo --http_addr=127.0.0.1:9001 --raft_addr=127.0.0.1:9000 --raft_id=3 --raft_cluster=1/127.0.0.1:7000,2/127.0.0.1:8000,3/127.0.0.1:9000
+
+* set请求：curl http://127.0.0.1:7001/set?key=test_key&value=test_value
+
+* get请求：curl http://127.0.0.1:7001/get?key=test_key
+
+### 七、模拟场景
 
 ##### 选举变化相关
 
-1. 集群初始化启动，三个节点都是follower，同时等待一个随机election timeout时间变成candidate，然后发起投票，最后获得majority投票的节点变成leader
+1. 集群启动后，follower等待一个随机election timeout时间变成candidate，然后发起投票，如果不能获得majority票数，则任期term会一直增加（未pre-vote情况）
 
-2. leader选举成功后发送heartbeat保持leader的地位
+2. 集群启动后，follower等待一个随机election timeout时间变成candidate，然后发起投票，获得majority票数的节点变成leader
 
-3. leader失去majority节点的heartbeat响应，退回到follower
+3. leader选举成功后发送heartbeat保持leader的地位
 
-4. leader发现更高的term退回到follower
+4. leader失去majority节点的heartbeat响应，退回到follower
+
+5. leader发现更高的term退回到follower
 
 ##### 日志复制相关
 
@@ -75,5 +85,4 @@
 
 4. 覆盖follower无效的日志
 
-### 七、QA
-
+### 八、QA
