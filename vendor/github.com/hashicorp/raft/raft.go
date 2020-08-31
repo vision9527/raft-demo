@@ -284,7 +284,7 @@ func (r *Raft) runCandidate() {
 			// Check if the vote is granted
 			if vote.Granted {
 				grantedVotes++
-				r.logger.Debug("vote granted", "from", vote.voterID, "term", vote.Term, "tally", grantedVotes)
+				r.logger.Debug("vote granted", "from", vote.voterID, "term", vote.Term, "tally", grantedVotes, "votesNeeded", votesNeeded)
 			}
 
 			// Check if we've become the leader
@@ -1651,6 +1651,7 @@ func (r *Raft) electSelf() <-chan *voteResult {
 		r.goFunc(func() {
 			defer metrics.MeasureSince([]string{"raft", "candidate", "electSelf"}, time.Now())
 			resp := &voteResult{voterID: peer.ID}
+			r.logger.Info("进入candidate发送投票RPC RequestVote", "candidateID", r.localID, "followerID", peer.ID, "term", req.Term, "LastLogIndex", req.LastLogIndex, "LastLogTerm", req.LastLogTerm)
 			err := r.trans.RequestVote(peer.ID, peer.Address, req, &resp.RequestVoteResponse)
 			if err != nil {
 				r.logger.Error("failed to make requestVote RPC",
