@@ -371,6 +371,7 @@ func (r *Raft) heartbeat(s *followerReplication, stopCh chan struct{}) {
 		select {
 		case <-s.notifyCh:
 		case <-randomTimeout(r.conf.HeartbeatTimeout / 10):
+			r.logger.Info("HeartbeatTimeout leader发送heartbeat", "leader", string(r.localID), "follower", string(s.peer.ID), "term", s.currentTerm)
 		case <-stopCh:
 			return
 		}
