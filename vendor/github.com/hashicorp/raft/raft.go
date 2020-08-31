@@ -198,6 +198,7 @@ func (r *Raft) runFollower() {
 			// Heartbeat failed! Transition to the candidate state
 			lastLeader := r.Leader()
 			r.setLeader("")
+			r.logger.Warn("follower经过election timeout时间进入candidate")
 
 			if r.configurations.latestIndex == 0 {
 				if !didWarn {
