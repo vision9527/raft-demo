@@ -371,7 +371,7 @@ func (r *Raft) heartbeat(s *followerReplication, stopCh chan struct{}) {
 		select {
 		case <-s.notifyCh:
 		case <-randomTimeout(r.conf.HeartbeatTimeout / 10):
-			r.logger.Info("HeartbeatTimeout leader发送heartbeat", "leader", string(r.localID), "follower", string(s.peer.ID), "term", s.currentTerm)
+			// r.logger.Info("HeartbeatTimeout leader发送heartbeat", "leader", string(r.localID), "follower", string(s.peer.ID), "term", s.currentTerm)
 		case <-stopCh:
 			return
 		}
@@ -465,6 +465,10 @@ func (r *Raft) pipelineSend(s *followerReplication, p AppendPipeline, nextIdx *u
 	if err := r.setupAppendEntries(s, req, *nextIdx, lastIndex); err != nil {
 		return true
 	}
+	if len(req.Entries) != 0 {
+		r.logger.Info("3.复制日志给follower", "followerID", string(s.peer.ID), "term", req.Term, "index", req.Entries[0].Index,
+			"data", string(req.Entries[0].Data), "preLogIndex", req.PrevLogEntry, "preLogTerm", req.PrevLogTerm, "commitIndex", req.LeaderCommitIndex)
+	}
 
 	// Pipeline the append entries
 	if _, err := p.AppendEntries(req, new(AppendEntriesResponse)); err != nil {
@@ -489,7 +493,9 @@ func (r *Raft) pipelineDecode(s *followerReplication, p AppendPipeline, stopCh, 
 		case ready := <-respCh:
 			req, resp := ready.Request(), ready.Response()
 			appendStats(string(s.peer.ID), ready.Start(), float32(len(req.Entries)))
-
+			if len(req.Entries) != 0 {
+				r.logger.Info("4.收到follower复制日志的响应", "followerID", string(s.peer.ID), "term", req.Term, "index", req.Entries[0].Index, "success", resp.Success)
+			}
 			// Check for a newer term, stop running
 			if resp.Term > req.Term {
 				r.handleStaleTerm(s)

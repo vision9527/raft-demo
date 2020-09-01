@@ -2,7 +2,6 @@ package fsm
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"strings"
 	"sync"
@@ -16,7 +15,6 @@ type Fsm struct {
 }
 
 func (f *Fsm) Apply(l *raft.Log) interface{} {
-	fmt.Println("apply data:", string(l.Data))
 	data := strings.Split(string(l.Data), ",")
 	op := data[0]
 	f.mu.Lock()

@@ -99,11 +99,14 @@ func (h HttpServer) Set(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data := "set" + "," + key + "," + value
+	fmt.Println("------------------------------------------ 1.应用层kv server收到请求，提交到raft层，开始复制，需要复制的data:", data)
 	future := h.ctx.Apply([]byte(data), 5*time.Second)
 	if err := future.Error(); err != nil {
 		fmt.Fprintf(w, "error:"+err.Error())
+		fmt.Println("应用层kv server提交失败，data:", data)
 		return
 	}
+	fmt.Println("------------------------------------------ 7.应用层kv server复制数据且提交成功返回给客户端请求处理成功，处理的data:", data)
 	fmt.Fprintf(w, "ok")
 	return
 }

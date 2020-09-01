@@ -617,6 +617,7 @@ func (r *Raft) leaderLoop() {
 			// Process the newly committed entries
 			oldCommitIndex := r.getCommitIndex()
 			commitIndex := r.leaderState.commitment.getCommitIndex()
+			r.logger.Info("5.leader收到majority成功响应日志复制请求，提交此次复制的日志", "term", r.getCurrentTerm(), "lastLogIndex", r.getLastIndex(), "commitIndex", commitIndex)
 			r.setCommitIndex(commitIndex)
 
 			// New configration has been committed, set it as the committed
@@ -1070,6 +1071,7 @@ func (r *Raft) dispatchLogs(applyLogs []*logFuture) {
 	}
 
 	// Write the log entry locally
+	r.logger.Info("2.先将日志写入leader的log存储区域", "term", logs[0].Term, "index", logs[0].Index, "data", string(logs[0].Data))
 	if err := r.logs.StoreLogs(logs); err != nil {
 		r.logger.Error("failed to commit logs", "error", err)
 		for _, applyLog := range applyLogs {
@@ -1158,6 +1160,7 @@ func (r *Raft) processLogs(index uint64, futures map[uint64]*logFuture) {
 	}
 
 	// Update the lastApplied index and term
+	r.logger.Info("6.leader提交了此次复制的日志后，将日志实施到状态机", "term", r.getCurrentTerm(), "lastLogIndex", r.getLastIndex(), "commitIndex", r.getCommitIndex(), "applyIndex", index)
 	r.setLastApplied(index)
 }
 
