@@ -579,6 +579,7 @@ func appendStats(peer string, start time.Time, logs float32) {
 
 // handleStaleTerm is used when a follower indicates that we have a stale term.
 func (r *Raft) handleStaleTerm(s *followerReplication) {
+	// 发现一个更新的term，从leader状态变成follower状态
 	r.logger.Error("peer has newer term, stopping replication", "peer", s.peer)
 	s.notifyAll(false) // No longer leader
 	asyncNotifyCh(s.stepDown)
