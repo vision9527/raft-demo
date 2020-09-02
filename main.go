@@ -45,7 +45,7 @@ func main() {
 	// 初始化raft
 	myRaft, fm, err := myraft.NewMyRaft(raftAddr, raftId, raftDir)
 	if err != nil {
-		fmt.Println("NewMyRaft error")
+		fmt.Println("NewMyRaft error ", err)
 		os.Exit(1)
 		return
 	}
@@ -71,6 +71,12 @@ func main() {
 	http.ListenAndServe(httpAddr, nil)
 
 	// 关闭raft
+	// 关闭前先保存快照，主要是保存apply的进度，避免重复apply，这只是个取巧的方法，正确做法是允许重复apply，在应用层控制重复apply
+	snapshotFuture := myRaft.Snapshot()
+	if err := snapshotFuture.Error(); err != nil {
+		fmt.Printf("snapshot error:%v \n", err)
+	}
+
 	shutdownFuture := myRaft.Shutdown()
 	if err := shutdownFuture.Error(); err != nil {
 		fmt.Printf("shutdown raft error:%v \n", err)
