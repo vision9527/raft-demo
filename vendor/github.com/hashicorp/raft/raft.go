@@ -1160,7 +1160,12 @@ func (r *Raft) processLogs(index uint64, futures map[uint64]*logFuture) {
 	}
 
 	// Update the lastApplied index and term
-	r.logger.Info("6.leader提交了此次复制的日志后，将日志实施到状态机", "term", r.getCurrentTerm(), "lastLogIndex", r.getLastIndex(), "commitIndex", r.getCommitIndex(), "applyIndex", index)
+	if r.getState() == Follower {
+		r.logger.Info("8.follower将日志实施到状态机", "term", r.getCurrentTerm(), "lastLogIndex", r.getLastIndex(), "commitIndex", r.getCommitIndex(), "applyIndex", index)
+	} else {
+		r.logger.Info("6.leader提交了此次复制的日志后，将日志实施到状态机", "term", r.getCurrentTerm(), "lastLogIndex", r.getLastIndex(), "commitIndex", r.getCommitIndex(), "applyIndex", index)
+	}
+
 	r.setLastApplied(index)
 }
 
@@ -1364,6 +1369,7 @@ func (r *Raft) appendEntries(rpc RPC, a *AppendEntriesRequest) {
 		start := time.Now()
 		idx := min(a.LeaderCommitIndex, r.getLastIndex())
 		r.setCommitIndex(idx)
+		r.logger.Info("7.follower收到leader提交此次复制的日志的请求", "term", r.getCurrentTerm(), "lastLogIndex", r.getLastIndex(), "commitIndex", idx)
 		if r.configurations.latestIndex <= idx {
 			r.setCommittedConfiguration(r.configurations.latest, r.configurations.latestIndex)
 		}

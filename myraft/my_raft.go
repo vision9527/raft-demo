@@ -18,7 +18,7 @@ func NewMyRaft(raftAddr, raftId, raftDir string) (*raft.Raft, *fsm.Fsm, error) {
 	config.LocalID = raft.ServerID(raftId)
 	// config.HeartbeatTimeout = 1000 * time.Millisecond
 	// config.ElectionTimeout = 1000 * time.Millisecond
-	// config.CommitTimeout = 1000 * time.Millisecond
+	config.CommitTimeout = 5000 * time.Millisecond
 
 	addr, err := net.ResolveTCPAddr("tcp", raftAddr)
 	if err != nil {
