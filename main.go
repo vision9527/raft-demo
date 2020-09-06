@@ -45,7 +45,7 @@ func main() {
 	// 初始化raft
 	myRaft, fm, err := myraft.NewMyRaft(raftAddr, raftId, raftDir)
 	if err != nil {
-		fmt.Println("NewMyRaft error")
+		fmt.Println("NewMyRaft error ", err)
 		os.Exit(1)
 		return
 	}
