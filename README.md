@@ -65,23 +65,23 @@
 
 ##### 选举变化相关
 
-1. 集群启动后，follower等待一个随机election timeout时间变成candidate，然后发起投票，如果不能获得majority票数，则任期term会一直增加（未pre-vote情况）
+1. 集群启动后，follower等待一个随机election timeout时间变成candidate，然后发起投票，如果不能获得majority票数，则任期term会一直增加（未pre-vote情况）(branch: election-1)
 
-2. 集群启动后，follower等待一个随机election timeout时间变成candidate，然后发起投票，获得majority票数的节点变成leader
+2. 集群启动后，follower等待一个随机election timeout时间变成candidate，然后发起投票，获得majority票数的节点变成leader (branch: election-2)
 
-3. leader选举成功后发送heartbeat保持leader的地位
+3. leader选举成功后发送heartbeat保持leader的地位(branch: election-3)
 
-4. leader失去majority节点的heartbeat响应，退回到follower
+4. leader失去majority节点的heartbeat响应，退回到follower(branch: election-4)
 
-5. leader发现更高的term退回到follower
+5. leader发现更高的term退回到follower(branch: election-5)
 
 ##### 日志复制相关
 
-1. leader接收客户端请求，向集群内所有节点发送复制RPC，所有都正常响应 -> 正常commit，然后apply到状态机，最后返回客户端处理成功
+1. leader接收客户端请求，向集群内所有节点发送复制RPC，所有都正常响应 -> 正常commit，然后apply到状态机，最后返回客户端处理成功(branch: replicate-log-1)
 
-2. leader接收客户端请求，向集群内所有节点发送复制RPC，majority正常响应 -> 正常commit，然后apply到状态机，最后返回客户端处理成功
+2. leader接收客户端请求，向集群内所有节点发送复制RPC，majority正常响应 -> 正常commit，然后apply到状态机，最后返回客户端处理成功(branch: replicate-log-2)
 
-3. leader接收客户端请求，向集群内所有节点发送复制RPC，少于majority正常响应 -> 不能commit
+3. leader接收客户端请求，向集群内所有节点发送复制RPC，少于majority正常响应 -> 不能commit(branch: replicate-log-3)
 
 ### 八、收获
 
