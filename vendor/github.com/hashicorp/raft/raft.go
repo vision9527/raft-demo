@@ -199,7 +199,6 @@ func (r *Raft) runFollower() {
 			lastLeader := r.Leader()
 			r.setLeader("")
 			r.logger.Warn("follower经过election timeout时间进入candidate")
-
 			if r.configurations.latestIndex == 0 {
 				if !didWarn {
 					r.logger.Warn("no known peers, aborting election")
