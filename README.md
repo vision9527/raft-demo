@@ -19,7 +19,7 @@
 
 ### 三、Raft日志复制流程
 
-* 日志格式：term + index + data
+* 日志格式：term + index + data + type
 
 ![日志流程](./image/log_replicate.jpg)
 
@@ -77,13 +77,11 @@
 
 ##### 日志复制相关
 
-1. leader接收客户端请求，向集群内所有节点发送复制RPC，所有都正常响应 -> 正常commit，然后apply到状态机，最后返回客户端处理成功 **********
+1. leader接收客户端请求，向集群内所有节点发送复制RPC，所有都正常响应 -> 正常commit，然后apply到状态机，最后返回客户端处理成功
 
 2. leader接收客户端请求，向集群内所有节点发送复制RPC，majority正常响应 -> 正常commit，然后apply到状态机，最后返回客户端处理成功
 
 3. leader接收客户端请求，向集群内所有节点发送复制RPC，少于majority正常响应 -> 不能commit
-
-4. 覆盖follower无效的日志
 
 ### 八、收获
 
