@@ -19,7 +19,7 @@
 
 ### 三、Raft日志复制流程
 
-* 日志格式：term + index + data
+* 日志格式：term + index + data + type
 
 ![日志流程](./image/log_replicate.jpg)
 
@@ -83,6 +83,10 @@
 
 3. leader接收客户端请求，向集群内所有节点发送复制RPC，少于majority正常响应 -> 不能commit
 
-4. 覆盖follower无效的日志
+### 八、收获
 
-### 八、QA
+* hashicorp/raft源码
+
+* raft选举与日志复制
+
+### 九、QA
