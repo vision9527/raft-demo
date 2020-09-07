@@ -1,6 +1,6 @@
 ### 一、Raft协议简介
 
-* Raft is a consensus algorithm for managing a replicated log（Raft 是一种为了管理复制日志的一致性算法）
+* Raft 是一种为了管理复制日志的一致性协议
 
 * 复制状态机概念，复制状态机是指每个状态机或系统如果初始状态一致，然后接受的改变状态的命令也一致，最后产生的结果状态也是相同。
 
@@ -13,13 +13,13 @@
 
 ![选举流程](./image/election.png)
 
-* 选举过程图2（leader视角）
+* 选举过程图2（单个节点视角）
 
 ![选举流程2](./image/election_timeout.jpeg)
 
 ### 三、Raft日志复制流程
 
-* 日志格式：term + index + data + type
+* 日志格式：term + index + cmd + type
 
 ![日志流程](./image/log_replicate.jpg)
 
@@ -27,7 +27,7 @@
 
 ![日志流程](./image/machine_state.png)
 
-* 请求处理详细流程
+* 请求处理详细流程（重点）
 
 ![日志流程](./image/request_process.png)
 
@@ -40,8 +40,6 @@
 ### 五、hashicorp/raft源码讲解
 
 * hashicorp/raft库 [https://github.com/hashicorp/raft](https://github.com/hashicorp/raft)
-
-* raft节点配置相关
 
 * raft启动流程
 
@@ -61,7 +59,7 @@
 
 * get请求：curl http://127.0.0.1:7001/get?key=test_key
 
-### 七、模拟场景
+### 七、调试场景
 
 ##### 选举变化相关
 
