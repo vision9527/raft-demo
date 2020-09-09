@@ -9,11 +9,11 @@
 
 ### 二、Raft选举过程
 
-* 选举过程图1（整体视角）
+* 选举过程图1（单个节点视角）
 
 ![选举流程](./image/election.png)
 
-* 选举过程图2（单个节点视角）
+* 选举过程图2（整体视角）
 
 ![选举流程2](./image/election_timeout.jpeg)
 
@@ -30,6 +30,8 @@
 * 请求处理详细流程（重点）
 
 ![日志流程](./image/request_process.png)
+
+注：这里7. commit log 应该是在5. commit之后，但是因为commit有一定延迟所以从日志上看是在回复客户端以后
 
 ### 四、Raft协议动画演示
 
