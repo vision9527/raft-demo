@@ -47,10 +47,6 @@
 
 * raft监听事件
 
-* 追踪raft选举流程
-
-* 追踪raft日志复制流程
-
 ### 六、运行hashicorp/raft库搭建的简单kv服务
 
 * 编译：go build -mod vendor
@@ -76,8 +72,6 @@
 3. leader选举成功后发送heartbeat保持leader的地位(branch: election-3)
 
 4. leader失去majority节点的heartbeat响应，退回到follower(branch: election-4)
-
-5. leader发现更高的term退回到follower(branch: election-5)
 
 ##### 日志复制相关
 
