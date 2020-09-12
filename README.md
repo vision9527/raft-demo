@@ -47,6 +47,10 @@
 
 * raft监听事件
 
+* 追踪raft选举流程
+
+* 追踪raft日志复制流程
+
 ### 六、运行hashicorp/raft库搭建的简单kv服务
 
 * 编译：go build -mod vendor
