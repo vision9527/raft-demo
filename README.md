@@ -6,6 +6,9 @@
 
 * 中英文论文地址：https://github.com/maemual/raft-zh_cn
 
+* go夜读分享bilibili地址：https://www.bilibili.com/video/BV1tV411m7ir
+* go夜读分享youtube地址：https://www.youtube.com/watch?v=EjGNtHrq4UQ
+
 
 ### 二、Raft选举过程
 
@@ -88,3 +91,7 @@
 * raft选举与日志复制
 
 ### 九、QA
+
+纠正：3个节点宕机2个，剩下一个不可用，怎么处理请求的强一致？
+
+答：这个时候服务应该是不可用的，当然如果要强行提供查询的服务，强一致肯定是无法保证的。
