@@ -34,7 +34,7 @@
 
 ![日志流程](./image/request_process.png)
 
-注：这里7. commit log 应该是在5. commit之后，但是因为commit有一定延迟所以从日志上看是在回复客户端以后
+注：这里7. commit log 应该是在5. commit之后，但是因为commit策略的原因有一定延迟，所以从日志上看是在回复客户端以后
 
 ### 四、Raft协议动画演示
 
