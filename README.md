@@ -1,4 +1,4 @@
-另外一篇关于paxos协议的分享bilibili地址：https://github.com/vision9527/paxos
+另外一篇关于paxos协议的分享地址：https://github.com/vision9527/paxos
 
 ### 一、Raft协议简介
 
