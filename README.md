@@ -1,3 +1,5 @@
+另外一篇关于paxos协议的分享bilibili地址：https://github.com/vision9527/paxos
+
 ### 一、Raft协议简介
 
 * Raft 是一种为了管理复制日志的一致性协议
