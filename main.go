@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"sync/atomic"
 	"time"
 
 	"github.com/hashicorp/raft"
@@ -21,7 +22,7 @@ var (
 )
 
 var (
-	isLeader bool
+	isLeader int64
 )
 
 func init() {
@@ -53,10 +54,14 @@ func main() {
 	// 启动raft
 	myraft.Bootstrap(myRaft, raftId, raftAddr, raftCluster)
 
-	// 监听leader变化
+	// 监听leader变化（使用此方法无法保证强一致性读，仅做leader变化过程观察）
 	go func() {
 		for leader := range myRaft.LeaderCh() {
-			isLeader = leader
+			if leader {
+				atomic.StoreInt64(&isLeader, 1)
+			} else {
+				atomic.StoreInt64(&isLeader, 0)
+			}
 		}
 	}()
 
@@ -86,7 +91,7 @@ type HttpServer struct {
 }
 
 func (h HttpServer) Set(w http.ResponseWriter, r *http.Request) {
-	if !isLeader {
+	if atomic.LoadInt64(&isLeader) == 0 {
 		fmt.Fprintf(w, "not leader")
 		return
 	}
@@ -115,7 +120,7 @@ func (h HttpServer) Get(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "error key")
 		return
 	}
-	value := h.fsm.Data[key]
+	value := h.fsm.DataBase.Get(key)
 	fmt.Fprintf(w, value)
 	return
 }

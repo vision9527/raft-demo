@@ -40,9 +40,7 @@ func NewMyRaft(raftAddr, raftId, raftDir string) (*raft.Raft, *fsm.Fsm, error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	fm := new(fsm.Fsm)
-	fm.Data = make(map[string]string)
-
+	fm := fsm.NewFsm()
 	rf, err := raft.NewRaft(config, fm, logStore, stableStore, snapshots, transport)
 	if err != nil {
 		return nil, nil, err
